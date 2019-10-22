@@ -12,8 +12,6 @@ defmodule Boxes do
   that when we move orizontally (on the x axis) the next number is going
   to be the sum of the current position plus one, the same happens vertically (on the y axis).
 
-  Note: The x axis sum starts from 2, while the one on the y axis starts from 1.
-
   ## Parameters
 
     - `x`: Integer that represents the x coordinate
@@ -27,71 +25,40 @@ defmodule Boxes do
   """
   @spec answer(pos_integer, pos_integer) :: binary
   def answer(x, y) do
-    sum_x(x, 1)
-    |> sum_y(x, y)
-    |> to_string
+    find_partial_sum_on_wall(y)
+    |> add_x_component(x, y)
+    |> to_string()
   end
 
   @doc """
-  Sums the x coordinate.
+  Adds the x component to the partial sum on the y axis.
 
-  It recursively sums the current value with the position value.
-
-  This function is used by `answer/2`.
+  It recursively sums the current value with the position value
 
   ## Parameters
 
-    - `x`: Integer that represents the x coordinate
-    - `sum`: Integer that represents current sum. It should be called with `1` as its parameter
-
-  ## Example
-
-      iex> Boxes.sum_x(4, 1)
-      10
-
-  """
-  @spec sum_x(pos_integer, pos_integer) :: pos_integer
-  def sum_x(1, _sum), do: 1
-
-  def sum_x(2, sum), do: sum + 2
-
-  def sum_x(x, sum) do
-    sum_x(x - 1, sum + x)
-  end
-
-  @doc """
-  Sums the y coordinate.
-
-  Recursively sums the current value with the position value.
-
-  This function is used by `answer/2`.
-
-
-  ## Parameters
-
-    - `partial_result`: Integer that represents the partial sum calculated in `sum_x/2`
+    - `partial_sum`: Integer that represents the sum along the wall calculated in `find_partial_sum_on_wall/1`
     - `x`: Integer that represents the x coordinate
     - `y`: Integer that represents the y coordinate
 
+
   ## Example
 
-      iex> Boxes.sum_y(6, 3, 4)
-      18
-
+      iex> Boxes.add_x_component(4, 3, 3)
+      13
   """
-  @spec sum_y(pos_integer, pos_integer, pos_integer) :: pos_integer
-  def sum_y(partial_result, _x, 1), do: partial_result
 
-  def sum_y(partial_result, x, y) do
-    sum_y(partial_result + x, x + 1, y - 1)
+  @spec add_x_component(pos_integer, pos_integer, pos_integer) :: pos_integer
+  def add_x_component(partial_sum, 1, _y), do: partial_sum
+
+  def add_x_component(partial_sum, x, y) do
+    add_x_component(partial_sum + y + 1, x - 1, y + 1)
   end
 
   @doc """
-  Sums the y coordinate.
+  Finds the partial sum running vertically against the wall (y coordinate).
 
   Recursively sums the current value with the position value.
-
-  This function is used by the function `reverse_answer/2`
 
   ## Parameters
 

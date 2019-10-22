@@ -16,18 +16,14 @@ defmodule BoxesTest do
     assert Boxes.answer(100_000, 100_000) == "19999800001"
 
     assert Boxes.answer(13457, 100_000) == "6436088697"
+    assert Boxes.answer(1, 4) == "7"
   end
 
-  test "sum_x/2" do
-    assert Boxes.sum_x(1, 1) == 1
-    assert Boxes.sum_x(6, 1) == 21
-    assert Boxes.sum_x(4, 1) == 10
-  end
-
-  test "sum_y/3" do
-    assert Boxes.sum_y(1, 1, 1) == 1
-    assert Boxes.sum_y(6, 3, 4) == 18
-    assert Boxes.sum_y(10, 4, 2) == 14
+  test "add_x_component/3" do
+    assert Boxes.add_x_component(4, 3, 3) == 13
+    assert Boxes.add_x_component(1, 1, 1) == 1
+    assert Boxes.add_x_component(7, 2, 4) == 12
+    assert Boxes.add_x_component(4, 1, 3) == 4
   end
 
   test "find_partial_sum_on_wall/1" do
