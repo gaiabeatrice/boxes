@@ -6,7 +6,7 @@ defmodule BoxesInput do
   """
 
   @doc """
-  Calculates the `box_id`, given a list of coordinate in a txt file that terminates with the character `0`.
+  Calculates the `box_id`s, given a list of coordinate in a txt file that terminates with the character `0`.
 
   The coordinates have to appear in the text file in the following way:
 
@@ -28,14 +28,14 @@ defmodule BoxesInput do
   0
   ```
 
+  It returns a map that has the coordinates as a tuple as the key, and the `box_id` as the value.
 
-  It returns a map that has the coordinates as a tuple as a key, and the `box_id` as the value.
   ## Parameters
     - `file_path`: the path of the file
   """
-  @spec calculate_ids(binary) :: map() | tuple()
+  @spec calculate_ids(binary) :: map()
   def calculate_ids(file_path) do
-    with {:file_read, {:ok, file}} <- {:file_read, File.read(file_path)},
+    with file <- File.read!(file_path),
          input_list <- String.split(file, "\n"),
          {:ok, validated_list} <-
            input_list |> Enum.reject(fn x -> x == "" end) |> validate_file() do
@@ -45,8 +45,7 @@ defmodule BoxesInput do
       end)
       |> Enum.into(%{})
     else
-      {:file_read, {:error, error}} -> {:error, error}
-      {:error, message} -> {:error, message}
+      {:error, message} -> raise message
     end
   end
 

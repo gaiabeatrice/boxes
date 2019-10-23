@@ -22,18 +22,37 @@ defmodule BoxesInputTest do
              {612, 231} => "354673"
            }
 
-    assert BoxesInput.calculate_ids("test/files/non_existent_file.txt") == {:error, :enoent}
-    assert BoxesInput.calculate_ids("test/files/only_terminator.txt") == {:error, "Empty file"}
-    assert BoxesInput.calculate_ids("test/files/empty_file.txt") == {:error, "Empty file"}
+    assert_raise(
+      File.Error,
+      "could not read file \"test/files/non_existent_file.txt\": no such file or directory",
+      fn ->
+        BoxesInput.calculate_ids("test/files/non_existent_file.txt")
+      end
+    )
 
-    assert BoxesInput.calculate_ids("test/files/no_termination.txt") ==
-             {:error, "The file does not have a proper termination"}
+    assert_raise(RuntimeError, "Empty file", fn ->
+      BoxesInput.calculate_ids("test/files/only_terminator.txt")
+    end)
 
-    assert BoxesInput.calculate_ids("test/files/odd_number_of_input.txt") ==
-             {:error, "The file has an invalid length"}
+    assert_raise(RuntimeError, "Empty file", fn ->
+      BoxesInput.calculate_ids("test/files/empty_file.txt")
+    end)
 
-    assert BoxesInput.calculate_ids("test/files/invalid_format_input.txt") ==
-             {:error, "One or more elements in the input file is not an allowed positive integer"}
+    assert_raise(RuntimeError, "The file does not have a proper termination", fn ->
+      BoxesInput.calculate_ids("test/files/no_termination.txt")
+    end)
+
+    assert_raise(RuntimeError, "The file has an invalid length", fn ->
+      BoxesInput.calculate_ids("test/files/odd_number_of_input.txt")
+    end)
+
+    assert_raise(
+      RuntimeError,
+      "One or more elements in the input file is not an allowed positive integer",
+      fn ->
+        BoxesInput.calculate_ids("test/files/invalid_format_input.txt")
+      end
+    )
   end
 
   test "convert_list/1" do

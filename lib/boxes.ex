@@ -78,16 +78,17 @@ defmodule Boxes do
   end
 
   @doc """
-  Sums the x coordinate.
+  Finds the x coordinate.
 
-  Recursively sums the current value with the position value.
+  Starting from the partial sum of the y component, the `box_id`,
+  and the y component, it finds the x coordinate
 
   This function is used by the function `reverse_answer/2`
 
   ## Parameters
 
     - `box_id`: Integer that represents the id of the box
-    - `partial_sum`: Integer that was calculated in `find_partial_sum_on_wall`
+    - `partial_sum`: Integer that was calculated in `find_partial_sum_on_wall/1`
     - `y`: Integer that represents the y coordinate
 
   ## Example
@@ -119,8 +120,6 @@ defmodule Boxes do
   """
   @spec reverse_answer(pos_integer, pos_integer) :: pos_integer
   def reverse_answer(y, box_id) do
-    partial_sum = find_partial_sum_on_wall(y)
-
-    find_x_component(box_id, partial_sum, y)
+    find_x_component(box_id, find_partial_sum_on_wall(y), y)
   end
 end
